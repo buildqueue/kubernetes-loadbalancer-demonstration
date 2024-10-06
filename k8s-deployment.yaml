@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-flask-app-deployment
+spec:
+  replicas: 20
+  selector:
+    matchLabels:
+      app: simple-flask-app
+  template:
+    metadata:
+      labels:
+        app: simple-flask-app
+    spec:
+      containers:
+      - name: simple-flask-app
+        image: buildqueue/simple-flask-app:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-flask-app-service
+spec:
+  selector:
+    app: simple-flask-app
+  ports:
+    - protocol: TCP
+      port: 81
+      targetPort: 5000
+  type: LoadBalancer
